@@ -51,7 +51,8 @@ export const load: PageServerLoad = async ({ params, setHeaders }) => {
 			player: data,
 			streamed: {
 				bans: getPlayerBans(data.player_id),
-				mainGame: getGameInfo('cs2', data.player_id)
+				cs2: getGameInfo('cs2', data.player_id),
+				csgo: getGameInfo('csgo', data.player_id)
 			}
 		};
 	}
