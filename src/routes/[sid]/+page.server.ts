@@ -3,6 +3,7 @@ import { SERCRET_FACEIT_SERVER_KEY } from '$env/static/private';
 import { z } from 'zod';
 import type { FaceitAPIResponse, FaceitAPIErrors, FaceitAPIBanReponse } from '$lib/types/faceitAPI';
 import { faceitAPIResponseSchema } from '$lib/types/faceitAPI';
+import { redirect, fail, error } from '@sveltejs/kit';
 
 const getPlayerInfo = async (sid: string): Promise<FaceitAPIResponse> => {
 	const response = await fetch(
@@ -45,8 +46,11 @@ export const load: PageServerLoad = async ({ params, setHeaders }) => {
 		'cache-control': 'public, max-age=60'
 	});
 	const data = await getPlayerInfo(params.sid);
+	if (data.errors) {
+		error(404, 'No faceit account found');
+	}
 
-	if (data.games.cs2) {
+	if (data.games) {
 		return {
 			player: data,
 			streamed: {

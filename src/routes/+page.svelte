@@ -6,7 +6,7 @@
 	console.log(form);
 </script>
 
-<h2 class="text-center text-2xl font-bold mb-5">Insert steam profile url</h2>
+<h2 class="text-center text-2xl font-bold mb-5 sm:mt-52 mt-32">Insert steam profile url</h2>
 
 {#if form?.error}
 	<h3 class="text-center font-bold text-red-600 italic mb-3">{form.message}</h3>
