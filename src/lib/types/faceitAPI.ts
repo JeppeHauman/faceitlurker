@@ -38,7 +38,50 @@ export type FaceitAPIResponse = z.infer<typeof faceitAPIResponseSchema> & Faceit
 
 // STATS API
 
-export const faceitStatsAPIResponse = z.object({});
+export const csgoLifetimeStats = z.object({
+	Matches: z.string(),
+	Wins: z.string(),
+	'Average Headshots %': z.string(),
+	'Win Rate %': z.string()
+});
+
+export const cs2LifetimeStats = z.object({
+	Matches: z.string(),
+	Wins: z.string(),
+	'Total Matches': z.string(),
+	'Average Headshots %': z.string()
+});
+
+export const segmentSchema = z.object({
+	img_small: z.string(),
+	img_regular: z.string(),
+	label: z.string(),
+	mode: z.string(),
+	type: z.string(),
+	stats: z.object({
+		Matches: z.string(),
+		Wins: z.string(),
+		'Win Rate %': z.string().optional()
+	})
+});
+
+export const faceitCsgoStatsAPIResponse = z.object({
+	game_id: z.string(),
+	player_id: z.string(),
+	lifetime: csgoLifetimeStats,
+	segments: z.array(segmentSchema)
+});
+
+export type FaceitCsgoStatsAPIResponse = z.infer<typeof faceitCsgoStatsAPIResponse>;
+
+export const faceitCs2StatsAPIResponse = z.object({
+	game_id: z.string(),
+	player_id: z.string(),
+	lifetime: cs2LifetimeStats,
+	segments: z.array(segmentSchema)
+});
+
+export type FaceitCs2StatsAPIResponse = z.infer<typeof faceitCs2StatsAPIResponse>;
 
 // BANS API
 

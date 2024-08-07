@@ -19,23 +19,22 @@
 
 	let cs2Wins = $state(0);
 	let cs2Matches = $state(0);
-	let cs2WinPercent = $state(0);
 
 	onMount(async () => {
 		const csgo = await data.streamed.csgo;
 		const cs2 = await data.streamed.cs2;
 		console.log(csgo);
 		console.log(cs2);
-		if (cs2 !== undefined) {
-			cs2Wins = Number(cs2.lifetime['Wins'] - Number(csgo.lifetime['Wins']));
-			cs2Matches = Number(cs2.lifetime['Matches']) - Number(csgo.lifetime['Matches']);
+		if (cs2 !== undefined && csgo) {
+			cs2Wins = Number(cs2.lifetime.Wins) - Number(csgo.lifetime.Wins);
+			cs2Matches = Number(cs2.lifetime.Matches) - Number(csgo.lifetime.Matches);
 		}
-		if (!csgo) {
-			cs2Wins = Number(cs2.lifetime['Wins']);
-			cs2Matches = Number(cs2.lifetime['Matches']);
+		if (!csgo && cs2) {
+			cs2Wins = Number(cs2.lifetime.Wins);
+			cs2Matches = Number(cs2.lifetime.Matches);
 		}
 
-		if (cs2Wins < 1 || Number(cs2.lifetime['Total Matches']) < 1) {
+		if (cs2Wins < 1) {
 			cs2Active = false;
 		}
 	});
@@ -98,14 +97,15 @@
 						{#each cs2.segments
 							.filter((map) => map.mode == '5v5')
 
-							.sort((a, b) => {
-								if (b.stats['Matches']) {
-									if (a.stats['Matches']) return b.stats['Matches'] - a.stats['Matches'];
-									else return b.stats['Matches'] - a.stats['Total Matches'];
-								} else {
-									if (a.stats['Matches']) return b.stats['Total Matches'] - a.stats['Matches'];
-									else return b.stats['Total Matches'] - a.stats['Total Matches'];
-								}
+							.sort((map1, map2) => {
+								return Number(map2.stats.Matches) - Number(map1.stats.Matches);
+								// if (b.stats['Matches']) {
+								// 	if (a.stats['Matches']) return Number(b.stats.Matches) - Number(a.stats.Matches);
+								// 	else return Number(b.stats.Matches) - Number(a.stats.Matches);
+								// } else {
+								// 	if (a.stats['Matches']) return b.stats['Total Matches'] - a.stats['Matches'];
+								// 	else return b.stats['Total Matches'] - a.stats['Total Matches'];
+								// }
 							}) as map}
 							<div
 								class="relative w-full max-w-sm mx-auto rounded-md py-5 space-y-3 bg-black bg-opacity-50 text-zinc-50"
@@ -116,7 +116,7 @@
 									class={`-z-10 absolute inset-0 bg-no-repeat bg-cover bg-center rounded-md`}
 								></div>
 								<h5>{map.label}</h5>
-								<p>Matches: {map.stats['Matches'] || map.stats['Total Matches']}</p>
+								<p>Matches: {map.stats.Matches}</p>
 							</div>
 						{/each}
 					</div>
@@ -130,30 +130,32 @@
 				<p>Elo: {parsedPlayer.games['csgo']?.faceit_elo}</p>
 			</div>
 			{#await data.streamed.csgo then csgo}
-				<div class="text-xl font-semibold mb-10">
-					<p>Total matches: {csgo.lifetime['Matches']}</p>
-					<p>Win rate: {csgo.lifetime['Win Rate %']}%</p>
-					<p>Average Headshot: {csgo.lifetime['Average Headshots %']}%</p>
-				</div>
-				<div class="grid sm:grid-cols-2 gap-5 mx-auto w-full max-w-3xl sm:place-content-between">
-					{#if csgo.segments}
-						{#each csgo.segments
-							.filter((map) => map.mode == '5v5')
-							.sort((a, b) => b.stats['Matches'] - a.stats['Matches']) as map}
-							<div
-								class="relative sm:w-full max-w-sm rounded-md py-5 space-y-3 bg-black bg-opacity-50 text-zinc-50"
-							>
-								<!-- Background Image -->
+				{#if csgo}
+					<div class="text-xl font-semibold mb-10">
+						<p>Total matches: {csgo.lifetime.Matches}</p>
+						<p>Win rate: {csgo.lifetime['Win Rate %']}%</p>
+						<p>Average Headshot: {csgo.lifetime['Average Headshots %']}%</p>
+					</div>
+					<div class="grid sm:grid-cols-2 gap-5 mx-auto w-full max-w-3xl sm:place-content-between">
+						{#if csgo.segments}
+							{#each csgo.segments
+								.filter((map) => map.mode == '5v5')
+								.sort((map1, map2) => Number(map2.stats.Matches) - Number(map1.stats.Matches)) as map}
 								<div
-									style={`background-image: url('${map.img_regular}')`}
-									class={`-z-10 absolute inset-0 bg-no-repeat bg-cover bg-center rounded-md`}
-								></div>
-								<h5>{map.label}</h5>
-								<p>{map.stats['Matches']}</p>
-							</div>
-						{/each}
-					{/if}
-				</div>
+									class="relative sm:w-full max-w-sm rounded-md py-5 space-y-3 bg-black bg-opacity-50 text-zinc-50"
+								>
+									<!-- Background Image -->
+									<div
+										style={`background-image: url('${map.img_regular}')`}
+										class={`-z-10 absolute inset-0 bg-no-repeat bg-cover bg-center rounded-md`}
+									></div>
+									<h5>{map.label}</h5>
+									<p>Matches: {map.stats.Matches}</p>
+								</div>
+							{/each}
+						{/if}
+					</div>
+				{/if}
 			{:catch error}
 				<p>{error}</p>
 			{/await}
