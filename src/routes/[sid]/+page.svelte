@@ -4,10 +4,12 @@
 	import { faceitAPIResponseSchema } from '$lib/types/faceitAPI';
 	import { onMount } from 'svelte';
 	import { afterNavigate } from '$app/navigation';
+	import faceit_logo from '$lib/assets/faceit_logo.svg';
 
 	let { data } = $props();
 
 	const parsedPlayer = faceitAPIResponseSchema.parse(data.player);
+	console.log(data.player);
 	const player = data.player;
 	let cs2Active = $state(true);
 	let games: FaceitGame[];
@@ -23,8 +25,6 @@
 	onMount(async () => {
 		const csgo = await data.streamed.csgo;
 		const cs2 = await data.streamed.cs2;
-		console.log(csgo);
-		console.log(cs2);
 		if (cs2 !== undefined && csgo) {
 			cs2Wins = Number(cs2.lifetime.Wins) - Number(csgo.lifetime.Wins);
 			cs2Matches = Number(cs2.lifetime.Matches) - Number(csgo.lifetime.Matches);
@@ -34,7 +34,7 @@
 			cs2Matches = Number(cs2.lifetime.Matches);
 		}
 
-		if (cs2Wins < 1) {
+		if (cs2Matches < 1) {
 			cs2Active = false;
 		}
 	});
@@ -45,6 +45,14 @@
 </svelte:head>
 
 <h1 class="text-center text-4xl font-bold my-10">{parsedPlayer.nickname}</h1>
+
+<a
+	target="_blank"
+	class="block mx-auto w-8"
+	href={parsedPlayer.faceit_url.replace('{lang}', parsedPlayer.settings.language)}
+>
+	<img src={faceit_logo} alt="faceit logo" />
+</a>
 
 <div class="text-center my-10 space-y-4">
 	{#await data.streamed.bans then bans}
@@ -80,7 +88,12 @@
 	{:else}
 		{#if cs2Active}
 			<div class="text-xl font-semibold mt-10">
-				<p>Elo: {parsedPlayer.games['cs2']?.faceit_elo}</p>
+				<p class="flex items-center justify-center gap-2">
+					Elo: {parsedPlayer.games['cs2']?.faceit_elo}
+					{#await import(`$lib/assets/faceitLevelIcon/level_${parsedPlayer.games.cs2?.skill_level}.svg`) then { default: src }}
+						<img class="aspect-square w-7 inline-flex" {src} alt="faceit skill level icon" />
+					{/await}
+				</p>
 			</div>
 		{/if}
 		{#await data.streamed.cs2}
@@ -99,13 +112,6 @@
 
 							.sort((map1, map2) => {
 								return Number(map2.stats.Matches) - Number(map1.stats.Matches);
-								// if (b.stats['Matches']) {
-								// 	if (a.stats['Matches']) return Number(b.stats.Matches) - Number(a.stats.Matches);
-								// 	else return Number(b.stats.Matches) - Number(a.stats.Matches);
-								// } else {
-								// 	if (a.stats['Matches']) return b.stats['Total Matches'] - a.stats['Matches'];
-								// 	else return b.stats['Total Matches'] - a.stats['Total Matches'];
-								// }
 							}) as map}
 							<div
 								class="relative w-full max-w-sm mx-auto rounded-md py-5 space-y-3 bg-black bg-opacity-50 text-zinc-50"
@@ -127,7 +133,12 @@
 		{/await}
 		{#if !cs2Active}
 			<div class="text-xl font-semibold mt-10">
-				<p>Elo: {parsedPlayer.games['csgo']?.faceit_elo}</p>
+				<p class="flex items-center justify-center gap-2">
+					Elo: {parsedPlayer.games['csgo']?.faceit_elo}
+					{#await import(`$lib/assets/faceitLevelIcon/level_${parsedPlayer.games.csgo?.skill_level}.svg`) then { default: src }}
+						<img class="aspect-square w-7 inline-flex" {src} alt="faceit skill level icon" />
+					{/await}
+				</p>
 			</div>
 			{#await data.streamed.csgo then csgo}
 				{#if csgo}

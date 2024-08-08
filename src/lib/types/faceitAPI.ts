@@ -18,7 +18,11 @@ export const faceitAPIResponseSchema = z.object({
 		cs2: faceitGameSchema.optional(),
 		csgo: faceitGameSchema.optional()
 	}),
-	steam_id_64: z.string()
+	steam_id_64: z.string(),
+	faceit_url: z.string(),
+	settings: z.object({
+		language: z.string()
+	})
 });
 
 export const FaceitAPIResponseErrorSchema = z.object({
