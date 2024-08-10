@@ -1,7 +1,10 @@
 import type { PageServerLoad, Actions } from './$types';
 import { SERCRET_FACEIT_SERVER_KEY, SECRET_STEAM_API_KEY } from '$env/static/private';
 import SteamID from 'steamid';
-import { fail, redirect } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
+import { superValidate, fail, setError } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
+import { searchSchema } from '$lib/types/searchForm';
 
 const steamRegex = /(?:https?:\/\/)?steamcommunity\.com\/(?:profiles|id)\/[a-zA-Z0-9]+/;
 
@@ -14,19 +17,24 @@ export const load: PageServerLoad = async ({ url }) => {
 	// return {
 	// 	data: await response.json()
 	// };
+
+	const searchForm = await superValidate(zod(searchSchema));
+
+	return { searchForm };
 };
 
 export const actions = {
-	default: async ({ request }) => {
-		const formData = Object.fromEntries(await request.formData());
-		if (!steamRegex.test(formData.profileUrl.toString())) {
-			console.log(false);
-			return fail(400, {
-				error: true,
-				message: 'Please use steam profile url'
-			});
+	search: async ({ request }) => {
+		const form = await superValidate(request, zod(searchSchema));
+		// const formData = Object.fromEntries(await request.formData());
+		if (!form.valid) {
+			return fail(400, { form });
 		}
-		const newUrl = new URL(formData.profileUrl.toString());
+
+		if (!steamRegex.test(form.data.steamUrl)) {
+			return setError(form, '', 'Please use steam profile url');
+		}
+		const newUrl = new URL(form.data.steamUrl);
 		const filteredPath = newUrl.pathname.split('/').filter((el) => {
 			return el !== '';
 		});

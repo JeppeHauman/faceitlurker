@@ -1,8 +1,5 @@
 <script>
 	import '../app.css';
-
-	export let form;
-	console.log(form);
 </script>
 
 <svelte:head>

@@ -5,11 +5,11 @@
 	import { onMount } from 'svelte';
 	import { afterNavigate } from '$app/navigation';
 	import faceit_logo from '$lib/assets/faceit_logo.svg';
+	import SearchForm from '$lib/components/SearchForm.svelte';
 
 	let { data } = $props();
 
 	const parsedPlayer = faceitAPIResponseSchema.parse(data.player);
-	console.log(data.player);
 	const player = data.player;
 	let cs2Active = $state(true);
 	let games: FaceitGame[];
@@ -44,6 +44,10 @@
 	<title>{player.nickname} | FaceitLurker</title>
 </svelte:head>
 
+<div class="mt-20">
+	<SearchForm data={data.searchForm} />
+</div>
+
 <h1 class="text-center text-4xl font-bold my-10">{parsedPlayer.nickname}</h1>
 
 <a
@@ -69,13 +73,13 @@
 	<button
 		disabled={cs2Wins < 1}
 		title={`${cs2Wins < 1 ? 'No CS2 data' : ''}`}
-		class={`${cs2Active ? 'bg-zinc-400 border' : 'bg-zinc-800 border border-black border-opacity-0'} rounded-md py-2 px-4 text-xl`}
+		class={`${cs2Active ? 'bg-zinc-400 border' : 'bg-zinc-800 border border-black border-opacity-0'} rounded-sm py-2 px-4 text-xl`}
 		onclick={() => (cs2Active = true)}
 	>
 		CS2
 	</button>
 	<button
-		class={`${!cs2Active ? 'bg-zinc-400 border' : 'bg-zinc-800 border border-black border-opacity-0'} rounded-md py-2 px-4 text-xl`}
+		class={`${!cs2Active ? 'bg-zinc-400 border' : 'bg-zinc-800 border border-black border-opacity-0'} rounded-sm py-2 px-4 text-xl`}
 		onclick={() => (cs2Active = false)}
 	>
 		CSGO

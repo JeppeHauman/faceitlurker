@@ -10,6 +10,9 @@ import type {
 } from '$lib/types/faceitAPI';
 import { faceitAPIResponseSchema } from '$lib/types/faceitAPI';
 import { redirect, fail, error } from '@sveltejs/kit';
+import { superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
+import { searchSchema } from '$lib/types/searchForm';
 
 const getPlayerInfo = async (sid: string): Promise<FaceitAPIResponse> => {
 	const response = await fetch(
@@ -72,9 +75,12 @@ export const load: PageServerLoad = async ({ params, setHeaders }) => {
 		error(404, 'No faceit account found');
 	}
 
+	const searchForm = await superValidate(zod(searchSchema));
+
 	if (data.games) {
 		return {
 			player: data,
+			searchForm,
 			streamed: {
 				bans: getPlayerBans(data.player_id),
 				cs2: getCs2Info('cs2', data.player_id),
@@ -85,6 +91,7 @@ export const load: PageServerLoad = async ({ params, setHeaders }) => {
 
 	return {
 		player: data,
+		searchForm,
 		streamed: {
 			bans: getPlayerBans(data.player_id)
 		}
