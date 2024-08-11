@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import type { FaceitGame } from '$lib/types/faceitAPI';
-	import { faceitAPIResponseSchema } from '$lib/types/faceitAPI';
+	import { csgoLifetimeStats, faceitAPIResponseSchema } from '$lib/types/faceitAPI';
 	import { onMount } from 'svelte';
 	import { afterNavigate } from '$app/navigation';
 	import faceit_logo from '$lib/assets/faceit_logo.svg';
@@ -21,15 +21,18 @@
 
 	let cs2Wins = $state(0);
 	let cs2Matches = $state(0);
+	let csgoStats = $state(true);
 
 	onMount(async () => {
 		const csgo = await data.streamed.csgo;
 		const cs2 = await data.streamed.cs2;
-		if (cs2 !== undefined && csgo) {
+
+		if (cs2 && csgo && !cs2.errors && !csgo.errors) {
 			cs2Wins = Number(cs2.lifetime.Wins) - Number(csgo.lifetime.Wins);
-			cs2Matches = Number(cs2.lifetime.Matches) - Number(csgo.lifetime.Matches);
+			cs2Matches = Number(cs2.lifetime.Matches) - Number(csgo.lifetime.Matches) || 0;
 		}
-		if (!csgo && cs2) {
+		if (csgo?.errors && cs2) {
+			csgoStats = false;
 			cs2Wins = Number(cs2.lifetime.Wins);
 			cs2Matches = Number(cs2.lifetime.Matches);
 		}
@@ -52,24 +55,61 @@
 
 <a
 	target="_blank"
-	class="block mx-auto w-8"
+	class="block mx-auto w-8 mb-10"
 	href={parsedPlayer.faceit_url.replace('{lang}', parsedPlayer.settings.language)}
 >
 	<img src={faceit_logo} alt="faceit logo" />
 </a>
 
-<div class="text-center my-10 space-y-4">
+{#await data.streamed.steamBans then steamBans}
 	{#await data.streamed.bans then bans}
-		{#if bans.items.length > 0}
-			<h2 class="text-center text-2xl text-red-900">BANNED for {bans.items[0].reason}</h2>
-			{#if bans.items[0].ends_at}
-				<p>Ends at: {new Date(bans.items[0].ends_at).toLocaleDateString()}</p>
-			{/if}
+		{#if bans.items.length > 0 || steamBans.players[0].CommunityBanned || steamBans.players[0].NumberOfVACBans > 0 || steamBans.players[0].NumberOfGameBans > 0}
+			<div class="text-center flex justify-center gap-5">
+				{#if steamBans.players[0].CommunityBanned || steamBans.players[0].NumberOfVACBans > 0 || steamBans.players[0].NumberOfGameBans > 0}
+					<div>
+						<p>Volvo bans:</p>
+						{#if steamBans.players[0].CommunityBanned}
+							<p class="text-red-900 text-2xl">Community Banned</p>
+						{/if}
+						{#if steamBans.players[0].NumberOfGameBans === 1}
+							<p class="text-red-900 text-2xl">
+								{steamBans.players[0].NumberOfGameBans} Game Ban
+							</p>
+						{:else if steamBans.players[0].NumberOfGameBans > 1}
+							<p class="text-red-900 text-2xl">
+								{steamBans.players[0].NumberOfGameBans} Game Bans
+							</p>
+						{/if}
+						{#if steamBans.players[0].NumberOfVACBans === 1}
+							<p class="text-red-900 text-2xl">
+								{steamBans.players[0].NumberOfVACBans} VAC Ban
+							</p>
+						{:else if steamBans.players[0].NumberOfVACBans > 1}
+							<p class="text-red-900 text-2xl">
+								{steamBans.players[0].NumberOfVACBans} VAC Bans
+							</p>
+						{/if}
+						{#if steamBans.players[0].DaysSinceLastBan > 0}
+							<p class="text-red-900 text-2xl">
+								{steamBans.players[0].DaysSinceLastBan} Days since last ban
+							</p>
+						{/if}
+					</div>
+				{/if}
+
+				{#if bans.items[0].ends_at && new Date(bans.items[0].ends_at) > new Date()}
+					<div>
+						<p>Faceit bans:</p>
+						<h2 class="text-center text-2xl text-red-900">BANNED for {bans.items[0].reason}</h2>
+						<p>Ends at: {new Date(bans.items[0].ends_at).toLocaleDateString()}</p>
+					</div>
+				{/if}
+			</div>
 		{/if}
 	{/await}
-</div>
+{/await}
 
-<div class="flex justify-center items-center gap-1">
+<div class="flex justify-center items-center gap-1 mt-10">
 	<button
 		disabled={cs2Wins < 1}
 		title={`${cs2Wins < 1 ? 'No CS2 data' : ''}`}
@@ -81,6 +121,8 @@
 	<button
 		class={`${!cs2Active ? 'bg-zinc-400 border' : 'bg-zinc-800 border border-black border-opacity-0'} rounded-sm py-2 px-4 text-xl`}
 		onclick={() => (cs2Active = false)}
+		disabled={!csgoStats}
+		title={`${!csgoStats && 'No CSGO data'}`}
 	>
 		CSGO
 	</button>
@@ -103,7 +145,7 @@
 		{#await data.streamed.cs2}
 			<p>loading</p>
 		{:then cs2}
-			{#if cs2Active && cs2}
+			{#if cs2Active && cs2 && !cs2.errors}
 				<div class="text-xl font-semibold mb-10">
 					<p>Total matches: {cs2Matches}</p>
 					<p>Win rate: {Math.round((cs2Wins / cs2Matches) * 100)}%</p>
@@ -145,7 +187,7 @@
 				</p>
 			</div>
 			{#await data.streamed.csgo then csgo}
-				{#if csgo}
+				{#if csgo && !csgo.errors}
 					<div class="text-xl font-semibold mb-10">
 						<p>Total matches: {csgo.lifetime.Matches}</p>
 						<p>Win rate: {csgo.lifetime['Win Rate %']}%</p>

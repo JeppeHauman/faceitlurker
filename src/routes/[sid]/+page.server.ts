@@ -1,5 +1,5 @@
 import type { PageServerLoad } from './$types';
-import { SERCRET_FACEIT_SERVER_KEY } from '$env/static/private';
+import { SERCRET_FACEIT_SERVER_KEY, SECRET_STEAM_API_KEY } from '$env/static/private';
 import { z } from 'zod';
 import type {
 	FaceitAPIResponse,
@@ -13,10 +13,11 @@ import { redirect, fail, error } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { searchSchema } from '$lib/types/searchForm';
+import type { SteamBansAPIResponse } from '$lib/types/steamAPI';
 
-const getPlayerInfo = async (sid: string): Promise<FaceitAPIResponse> => {
+const getPlayerInfo = async (sid: string, game: string): Promise<FaceitAPIResponse> => {
 	const response = await fetch(
-		`https://open.faceit.com/data/v4/players?game_player_id=${sid}&game=csgo`,
+		`https://open.faceit.com/data/v4/players?game_player_id=${sid}&game=${game}`,
 		{
 			headers: {
 				Authorization: `Bearer ${SERCRET_FACEIT_SERVER_KEY}`
@@ -66,11 +67,24 @@ const getPlayerBans = async (playerId: string): Promise<FaceitAPIBanReponse> => 
 	return data;
 };
 
+const getSteamBans = async (steamId: string): Promise<SteamBansAPIResponse> => {
+	const response = await fetch(
+		`https://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key=${SECRET_STEAM_API_KEY}&steamids=${steamId}`
+	);
+	const data = await response.json();
+	return data;
+};
+
 export const load: PageServerLoad = async ({ params, setHeaders }) => {
 	setHeaders({
 		'cache-control': 'public, max-age=60'
 	});
-	const data = await getPlayerInfo(params.sid);
+
+	// try cs2 first
+	let data = await getPlayerInfo(params.sid, 'cs2');
+	if (data.errors) {
+		data = await getPlayerInfo(params.sid, 'csgo');
+	}
 	if (data.errors) {
 		error(404, 'No faceit account found');
 	}
@@ -84,7 +98,8 @@ export const load: PageServerLoad = async ({ params, setHeaders }) => {
 			streamed: {
 				bans: getPlayerBans(data.player_id),
 				cs2: getCs2Info('cs2', data.player_id),
-				csgo: getCsgoInfo('csgo', data.player_id)
+				csgo: getCsgoInfo('csgo', data.player_id),
+				steamBans: getSteamBans(data.steam_id_64)
 			}
 		};
 	}
@@ -93,7 +108,8 @@ export const load: PageServerLoad = async ({ params, setHeaders }) => {
 		player: data,
 		searchForm,
 		streamed: {
-			bans: getPlayerBans(data.player_id)
+			bans: getPlayerBans(data.player_id),
+			steamBans: getSteamBans(data.steam_id_64)
 		}
 	};
 };

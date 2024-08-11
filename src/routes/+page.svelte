@@ -5,6 +5,10 @@
 	export let data: PageData;
 </script>
 
+<svelte:head>
+	<title>FaceitLurker</title>
+</svelte:head>
+
 <h1 class="text-center text-4xl font-bold mt-24">Faceit Lurker</h1>
 
 <h2 class="text-center text-3xl font-bold mb-5 mt-32">Insert steam profile url</h2>

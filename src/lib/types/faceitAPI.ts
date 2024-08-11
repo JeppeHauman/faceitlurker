@@ -76,7 +76,8 @@ export const faceitCsgoStatsAPIResponse = z.object({
 	segments: z.array(segmentSchema)
 });
 
-export type FaceitCsgoStatsAPIResponse = z.infer<typeof faceitCsgoStatsAPIResponse>;
+export type FaceitCsgoStatsAPIResponse = z.infer<typeof faceitCsgoStatsAPIResponse> &
+	FaceitAPIErrors;
 
 export const faceitCs2StatsAPIResponse = z.object({
 	game_id: z.string(),
@@ -85,7 +86,7 @@ export const faceitCs2StatsAPIResponse = z.object({
 	segments: z.array(segmentSchema)
 });
 
-export type FaceitCs2StatsAPIResponse = z.infer<typeof faceitCs2StatsAPIResponse>;
+export type FaceitCs2StatsAPIResponse = z.infer<typeof faceitCs2StatsAPIResponse> & FaceitAPIErrors;
 
 // BANS API
 
