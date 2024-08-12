@@ -19,7 +19,7 @@
 		type="text"
 		name="steamUrl"
 		bind:value={$form.steamUrl}
-		placeholder="E.g. https://steamcommunity.com/profiles/[profile]/"
+		placeholder="E.g. https://steamcommunity.com/profiles/76561198028780484/"
 	/>
 	<button type="submit" class="border rounded-sm w-fit py-2 px-4 mx-auto hover:bg-zinc-400"
 		>Search</button

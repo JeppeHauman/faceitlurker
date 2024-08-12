@@ -143,7 +143,7 @@
 			</div>
 		{/if}
 		{#await data.streamed.cs2}
-			<p>loading</p>
+			<p>loading ...</p>
 		{:then cs2}
 			{#if cs2Active && cs2 && !cs2.errors}
 				<div class="text-xl font-semibold mb-10">
