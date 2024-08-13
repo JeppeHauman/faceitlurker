@@ -15,7 +15,7 @@
 {/if}
 
 <form
-	class={`max-w-xl w-full mx-auto ${isHomepage ? 'grid gap-2' : 'flex gap-0 max-w-2xl'}`}
+	class={`w-full mx-auto ${isHomepage ? 'grid gap-2 max-w-xl' : 'flex gap-0 max-w-2xl'}`}
 	method="POST"
 	action="/?/search"
 >
