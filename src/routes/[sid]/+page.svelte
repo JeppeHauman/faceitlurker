@@ -3,7 +3,7 @@
 	import type { FaceitGame } from '$lib/types/faceitAPI';
 	import { csgoLifetimeStats, faceitAPIResponseSchema } from '$lib/types/faceitAPI';
 	import { onMount } from 'svelte';
-	import { afterNavigate } from '$app/navigation';
+	import { page } from '$app/stores';
 	import faceit_logo from '$lib/assets/faceit_logo.svg';
 	import SearchForm from '$lib/components/SearchForm.svelte';
 
@@ -18,6 +18,8 @@
 		games = Object.values(parsedPlayer.games);
 		gameNames = Object.keys(parsedPlayer.games);
 	}
+
+	const isHomepage = $page.url.pathname === '/';
 
 	let cs2Wins = $state(0);
 	let cs2Matches = $state(0);
@@ -48,7 +50,7 @@
 </svelte:head>
 
 <div class="mt-20">
-	<SearchForm data={data.searchForm} />
+	<SearchForm data={data.searchForm} {isHomepage} />
 </div>
 
 <h1 class="text-center text-4xl font-bold my-10">{parsedPlayer.nickname}</h1>
