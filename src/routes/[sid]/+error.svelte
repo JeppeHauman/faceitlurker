@@ -12,7 +12,7 @@
 	<a class="border rounded-md py-2 px-4 w-fit mx-auto hover:bg-zinc-900" href="/">Try again</a>
 
 	<div>
-		<p>If you are experiences unexpected issues</p>
-		<p>Contact me on <a class="underline" href="https://github.com/JeppeHauman">Github</a></p>
+		<p>If you are experiencing unexpected issues,</p>
+		<p>contact me on <a class="underline" href="https://github.com/JeppeHauman">Github</a></p>
 	</div>
 </div>
