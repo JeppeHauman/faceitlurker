@@ -12,7 +12,6 @@
 
 	const parsedPlayer = faceitAPIResponseSchema.parse(data.player);
 	const player = data.player;
-	let cs2Active = $state(true);
 	let games: FaceitGame[];
 	let gameNames: string[];
 	if (parsedPlayer.games) {
@@ -22,6 +21,7 @@
 
 	const isHomepage = $page.url.pathname === '/';
 
+	let cs2Active = $state(true);
 	let cs2Wins = $state(0);
 	let cs2Matches = $state(0);
 	let csgoStats = $state(true);

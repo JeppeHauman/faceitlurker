@@ -22,15 +22,17 @@
 <h3 class="my-10 text-center text-3xl">Top 5 EU players based on elo</h3>
 
 {#await data.streamed.topFive then topFive}
-	<div class="grid md:grid-cols-2 lg:grid-cols-5 gap-2 px-10 justify-stretch">
+	<div class="grid md:grid-cols-2 lg:grid-cols-5 gap-2 px-10 justify-stretch container mx-auto">
 		{#each topFive.items as player}
-			<div
-				class="border rounded-sm text-center max-w-sm md:max-w-none w-full mx-auto space-y-4 py-2"
+			<a
+				target="_blank"
+				href={`https://www.faceit.com/en/players/${player.nickname}`}
+				class="border rounded-sm text-center max-w-sm md:max-w-none w-full mx-auto space-y-4 py-2 hover:bg-zinc-800"
 			>
 				<h4 class="text-2xl font-semibold underline">
 					{player.position}
 				</h4>
-				<p class="">
+				<p class="space-x-2">
 					<span class="font-semibold text-xl">{player.nickname}</span>
 
 					<iconify-icon
@@ -40,7 +42,7 @@
 					></iconify-icon>
 				</p>
 				<p class="font-semibold text-xl">Elo: {player.faceit_elo}</p>
-			</div>
+			</a>
 		{/each}
 	</div>
 {/await}
