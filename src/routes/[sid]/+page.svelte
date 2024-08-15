@@ -6,6 +6,7 @@
 	import { page } from '$app/stores';
 	import faceit_logo from '$lib/assets/faceit_logo.svg';
 	import SearchForm from '$lib/components/SearchForm.svelte';
+	import 'iconify-icon';
 
 	let { data } = $props();
 
@@ -53,7 +54,14 @@
 	<SearchForm data={data.searchForm} {isHomepage} />
 </div>
 
-<h1 class="text-center text-4xl font-bold my-10">{parsedPlayer.nickname}</h1>
+<h1 class="text-center text-4xl font-bold my-10">
+	{parsedPlayer.nickname}
+	<iconify-icon
+		title={parsedPlayer.country}
+		class="align-middle text-2xl"
+		icon={`flag:${parsedPlayer.country}-4x3`}
+	></iconify-icon>
+</h1>
 
 <a
 	target="_blank"
