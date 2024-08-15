@@ -106,3 +106,20 @@ export const faceitAPIBanResponseSchema = z.object({
 });
 
 export type FaceitAPIBanReponse = z.infer<typeof faceitAPIBanResponseSchema>;
+
+export const faceitAPITopPlayersResponseSchema = z.object({
+	start: z.number(),
+	end: z.number(),
+	items: z.array(
+		z.object({
+			country: z.string(),
+			faceit_elo: z.number(),
+			game_skill_level: z.number(),
+			nickname: z.string(),
+			player_id: z.string(),
+			position: z.number()
+		})
+	)
+});
+
+export type FaceitAPITopPlayersResponse = z.infer<typeof faceitAPITopPlayersResponseSchema>;

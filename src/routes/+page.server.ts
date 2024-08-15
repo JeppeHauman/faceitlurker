@@ -5,22 +5,41 @@ import { redirect } from '@sveltejs/kit';
 import { superValidate, fail, setError } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { searchSchema } from '$lib/types/searchForm';
+import type { FaceitAPITopPlayersResponse } from '$lib/types/faceitAPI';
 
 const steamRegex = /(?:https?:\/\/)?steamcommunity\.com\/(?:profiles|id)\/[a-zA-Z0-9]+/;
 
+const getTopPlayers = async (): Promise<FaceitAPITopPlayersResponse> => {
+	const response = await fetch(
+		`https://open.faceit.com/data/v4/rankings/games/cs2/regions/EU?limit=5`,
+		{
+			headers: {
+				Authorization: `Bearer ${SERCRET_FACEIT_SERVER_KEY}`
+			}
+		}
+	);
+	const data = await response.json();
+	return data;
+};
+
 export const load: PageServerLoad = async ({ url }) => {
-	// const response = await fetch(`https://open.faceit.com/data/v4/games`, {
-	// 	headers: {
-	// 		Authorization: `Bearer ${SERCRET_FACEIT_SERVER_KEY}`
+	// const response = await fetch(
+	// 	`https://open.faceit.com/data/v4/rankings/games/cs2/regions/EU?limit=5`,
+	// 	{
+	// 		headers: {
+	// 			Authorization: `Bearer ${SERCRET_FACEIT_SERVER_KEY}`
+	// 		}
 	// 	}
-	// });
-	// return {
-	// 	data: await response.json()
-	// };
+	// );
 
 	const searchForm = await superValidate(zod(searchSchema));
 
-	return { searchForm };
+	return {
+		searchForm,
+		streamed: {
+			topFive: getTopPlayers()
+		}
+	};
 };
 
 export const actions = {
