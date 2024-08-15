@@ -37,7 +37,7 @@
 
 					<iconify-icon
 						title={player.country}
-						class="align-text-top"
+						class="align-baseline"
 						icon={`flag:${player.country}-4x3`}
 					></iconify-icon>
 				</p>
