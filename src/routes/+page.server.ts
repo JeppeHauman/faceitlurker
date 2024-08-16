@@ -7,7 +7,7 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { searchSchema } from '$lib/types/searchForm';
 import type { FaceitAPITopPlayersResponse } from '$lib/types/faceitAPI';
 
-const steamRegex = /(?:https?:\/\/)?steamcommunity\.com\/(?:profiles|id)\/[a-zA-Z0-9]+/;
+const steamRegex = /(?:https?:\/\/)?steamcommunity\.com\/(?:profiles|id)\/[\Wa-zA-Z0-9]+/;
 
 const getTopPlayers = async (): Promise<FaceitAPITopPlayersResponse> => {
 	const response = await fetch(
