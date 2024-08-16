@@ -25,6 +25,8 @@
 	let cs2Wins = $state(0);
 	let cs2Matches = $state(0);
 	let csgoStats = $state(true);
+	let cs2KD = $state(0);
+	let csgoKD = $state(0);
 
 	onMount(async () => {
 		const csgo = await data.streamed.csgo;
@@ -38,6 +40,26 @@
 			csgoStats = false;
 			cs2Wins = Number(cs2.lifetime.Wins);
 			cs2Matches = Number(cs2.lifetime.Matches);
+		}
+		if (cs2 && !cs2.errors) {
+			let cs2Kills = 0,
+				cs2Deaths = 0;
+
+			cs2.segments.forEach((map) => {
+				cs2Kills += Number(map.stats.Kills);
+				cs2Deaths += Number(map.stats.Deaths);
+			});
+			cs2KD = cs2Kills / cs2Deaths;
+		}
+		if (csgo && !csgo.errors) {
+			let csgoKills = 0,
+				csgoDeaths = 0;
+
+			csgo.segments.forEach((map) => {
+				csgoKills += Number(map.stats.Kills);
+				csgoDeaths += Number(map.stats.Deaths);
+			});
+			csgoKD = csgoKills / csgoDeaths;
 		}
 
 		if (cs2Matches < 1) {
@@ -160,6 +182,7 @@
 					<p>Total matches: {cs2Matches}</p>
 					<p>Win rate: {Math.round((cs2Wins / cs2Matches) * 100)}%</p>
 					<p>Average Headshot: {cs2.lifetime['Average Headshots %']}%</p>
+					<p>K/D: {cs2KD.toFixed(2)}</p>
 				</div>
 				{#if cs2.segments}
 					<div class="grid sm:grid-cols-2 gap-5 mx-auto w-full max-w-3xl sm:place-content-between">
@@ -202,6 +225,7 @@
 						<p>Total matches: {csgo.lifetime.Matches}</p>
 						<p>Win rate: {csgo.lifetime['Win Rate %']}%</p>
 						<p>Average Headshot: {csgo.lifetime['Average Headshots %']}%</p>
+						<p>K/D: {csgoKD.toFixed(2)}</p>
 					</div>
 					<div class="grid sm:grid-cols-2 gap-5 mx-auto w-full max-w-3xl sm:place-content-between">
 						{#if csgo.segments}

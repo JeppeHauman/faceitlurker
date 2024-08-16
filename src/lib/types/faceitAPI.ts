@@ -46,14 +46,16 @@ export const csgoLifetimeStats = z.object({
 	Matches: z.string(),
 	Wins: z.string(),
 	'Average Headshots %': z.string(),
-	'Win Rate %': z.string()
+	'Win Rate %': z.string(),
+	'Average K/D Ratio': z.string()
 });
 
 export const cs2LifetimeStats = z.object({
 	Matches: z.string(),
 	Wins: z.string(),
 	'Total Matches': z.string(),
-	'Average Headshots %': z.string()
+	'Average Headshots %': z.string(),
+	'Average K/D Ratio': z.string()
 });
 
 export const segmentSchema = z.object({
@@ -65,7 +67,10 @@ export const segmentSchema = z.object({
 	stats: z.object({
 		Matches: z.string(),
 		Wins: z.string(),
-		'Win Rate %': z.string().optional()
+		'Win Rate %': z.string().optional(),
+		Deaths: z.string(),
+		Kills: z.string(),
+		'Average K/D Ratio': z.string()
 	})
 });
 
