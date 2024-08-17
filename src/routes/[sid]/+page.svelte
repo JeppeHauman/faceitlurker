@@ -80,7 +80,7 @@
 	{parsedPlayer.nickname}
 	<iconify-icon
 		title={parsedPlayer.country}
-		class="align-middle text-2xl"
+		class="align-baseline text-2xl"
 		icon={`flag:${parsedPlayer.country}-4x3`}
 	></iconify-icon>
 </h1>
@@ -145,16 +145,16 @@
 	<button
 		disabled={cs2Wins < 1}
 		title={`${cs2Wins < 1 ? 'No CS2 data' : ''}`}
-		class={`${cs2Active ? 'bg-zinc-400 border' : 'bg-zinc-800 border border-black border-opacity-0'} rounded-sm py-2 px-4 text-xl`}
+		class={`${cs2Active ? 'bg-zinc-400 border' : 'bg-zinc-800 border border-black border-opacity-0'} rounded-sm py-2 px-4 text-xl hover:border-opacity-100 hover:border-zinc-200`}
 		onclick={() => (cs2Active = true)}
 	>
 		CS2
 	</button>
 	<button
-		class={`${!cs2Active ? 'bg-zinc-400 border' : 'bg-zinc-800 border border-black border-opacity-0'} rounded-sm py-2 px-4 text-xl`}
+		class={`${!cs2Active ? 'bg-zinc-400 border' : 'bg-zinc-800 border border-black border-opacity-0'} rounded-sm py-2 px-4 text-xl hover:border-opacity-100 hover:border-zinc-200`}
 		onclick={() => (cs2Active = false)}
 		disabled={!csgoStats}
-		title={`${!csgoStats && 'No CSGO data'}`}
+		title={`${!csgoStats ? 'No CSGO data' : ''}`}
 	>
 		CSGO
 	</button>
@@ -182,7 +182,7 @@
 					<p>Total matches: {cs2Matches}</p>
 					<p>Win rate: {Math.round((cs2Wins / cs2Matches) * 100)}%</p>
 					<p>Average Headshot: {cs2.lifetime['Average Headshots %']}%</p>
-					<p>K/D: {cs2KD.toFixed(2)}</p>
+					<p>Lifetime K/D: {cs2KD.toFixed(2)}</p>
 				</div>
 				{#if cs2.segments}
 					<div class="grid sm:grid-cols-2 gap-5 mx-auto w-full max-w-3xl sm:place-content-between">

@@ -28,7 +28,7 @@
 	/>
 	<button
 		type="submit"
-		class={`${isHomepage ? 'mx-auto' : 'rounded-l-none'} border rounded-sm w-fit py-2 px-4 hover:bg-zinc-400`}
+		class={`${isHomepage ? 'mx-auto' : 'rounded-l-none'} font-semibold border rounded-sm w-fit py-2 px-4 hover:bg-zinc-700`}
 		>Search</button
 	>
 </form>
