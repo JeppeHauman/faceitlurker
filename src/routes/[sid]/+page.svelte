@@ -27,10 +27,20 @@
 	let csgoStats = $state(true);
 	let cs2KD = $state(0);
 	let csgoKD = $state(0);
+	let csHours = $state(0);
 
 	onMount(async () => {
 		const csgo = await data.streamed.csgo;
 		const cs2 = await data.streamed.cs2;
+		const hours = await data.streamed.hours;
+		if (hours.response.games) {
+			const gameHours = hours.response.games.filter((game: any) => {
+				return game.appid === 730;
+			})[0];
+			if (gameHours.playtime_forever > 0) {
+				csHours = gameHours.playtime_forever;
+			}
+		}
 
 		if (cs2 && csgo && !cs2.errors && !csgo.errors) {
 			cs2Wins = Number(cs2.lifetime.Wins) - Number(csgo.lifetime.Wins);
@@ -164,8 +174,17 @@
 	{#if player.errors && player.errors[0].http_status === 404}
 		<p>No faceit account found</p>
 	{:else}
+		<div class="my-4">
+			{#await data.streamed.hours then hours}
+				{#if csHours > 0}
+					<p class="text-xl font-semibold">Hours: {(csHours / 60).toFixed()}</p>
+				{:else}
+					<p class="text-xl font-semibold">Hours: Private</p>
+				{/if}
+			{/await}
+		</div>
 		{#if cs2Active}
-			<div class="text-xl font-semibold mt-10">
+			<div class="text-xl font-semibold">
 				<p class="flex items-center justify-center gap-2">
 					Elo: {parsedPlayer.games['cs2']?.faceit_elo}
 					{#await import(`$lib/assets/faceitLevelIcon/level_${parsedPlayer.games.cs2?.skill_level}.svg`) then { default: src }}
@@ -211,7 +230,7 @@
 			<p>{error.message}</p>
 		{/await}
 		{#if !cs2Active}
-			<div class="text-xl font-semibold mt-10">
+			<div class="text-xl font-semibold">
 				<p class="flex items-center justify-center gap-2">
 					Elo: {parsedPlayer.games['csgo']?.faceit_elo}
 					{#await import(`$lib/assets/faceitLevelIcon/level_${parsedPlayer.games.csgo?.skill_level}.svg`) then { default: src }}
@@ -225,7 +244,7 @@
 						<p>Total matches: {csgo.lifetime.Matches}</p>
 						<p>Win rate: {csgo.lifetime['Win Rate %']}%</p>
 						<p>Average Headshot: {csgo.lifetime['Average Headshots %']}%</p>
-						<p>K/D: {csgoKD.toFixed(2)}</p>
+						<p>Lifetime K/D: {csgoKD.toFixed(2)}</p>
 					</div>
 					<div class="grid sm:grid-cols-2 gap-5 mx-auto w-full max-w-3xl sm:place-content-between">
 						{#if csgo.segments}
