@@ -90,13 +90,6 @@ export const load: PageServerLoad = async ({ params, setHeaders }) => {
 		'cache-control': 'public, max-age=60'
 	});
 
-	// MAYBE USE THIS FOR HOURS IN GAME
-	// getSteamStats(params.sid);
-	// const games = await getSteamStats(params.sid);
-	// const csHours = games.response.games.filter((obj) => {
-	// 	return obj.appid === 730;
-	// });
-
 	// try cs2 first
 	let data = await getPlayerInfo(params.sid, 'cs2');
 	if (data.errors) {
