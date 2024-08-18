@@ -28,17 +28,22 @@
 	let cs2KD = $state(0);
 	let csgoKD = $state(0);
 	let csHours = $state(0);
+	let csHours2Weeks = $state(0);
 
 	onMount(async () => {
 		const csgo = await data.streamed.csgo;
 		const cs2 = await data.streamed.cs2;
 		const hours = await data.streamed.hours;
-		if (hours.response.games) {
+
+		if (hours && hours.response.games) {
 			const gameHours = hours.response.games.filter((game: any) => {
 				return game.appid === 730;
 			})[0];
 			if (gameHours.playtime_forever > 0) {
 				csHours = gameHours.playtime_forever;
+				if (gameHours.playtime_2weeks && gameHours.playtime_2weeks > 0) {
+					csHours2Weeks = gameHours.playtime_2weeks;
+				}
 			}
 		}
 
@@ -178,6 +183,9 @@
 			{#await data.streamed.hours then hours}
 				{#if csHours > 0}
 					<p class="text-xl font-semibold">Hours: {(csHours / 60).toFixed()}</p>
+					{#if csHours2Weeks > 0}
+						<p class="text-xl font-semibold">Past two weeks: {(csHours2Weeks / 60).toFixed()}</p>
+					{/if}
 				{:else}
 					<p class="text-xl font-semibold">Hours: Private</p>
 				{/if}

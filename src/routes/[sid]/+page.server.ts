@@ -13,7 +13,7 @@ import { redirect, fail, error } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { searchSchema } from '$lib/types/searchForm';
-import type { SteamBansAPIResponse } from '$lib/types/steamAPI';
+import type { SteamBansAPIResponse, SteamGameHoursAPIResponse } from '$lib/types/steamAPI';
 
 const getPlayerInfo = async (sid: string, game: string): Promise<FaceitAPIResponse> => {
 	const response = await fetch(
@@ -76,7 +76,7 @@ const getSteamBans = async (steamId: string): Promise<SteamBansAPIResponse> => {
 };
 
 // USEFUL FOR GETTING HOURS IN GAME
-const getSteamStats = async (sid: string) => {
+const getSteamGames = async (sid: string): Promise<SteamGameHoursAPIResponse> => {
 	const response = await fetch(
 		`https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=${SECRET_STEAM_API_KEY}&format=json&steamid=${sid}`
 	);
@@ -110,7 +110,7 @@ export const load: PageServerLoad = async ({ params, setHeaders }) => {
 				cs2: getCs2Info('cs2', data.player_id),
 				csgo: getCsgoInfo('csgo', data.player_id),
 				steamBans: getSteamBans(data.steam_id_64),
-				hours: getSteamStats(data.steam_id_64)
+				hours: getSteamGames(data.steam_id_64)
 			}
 		};
 	}

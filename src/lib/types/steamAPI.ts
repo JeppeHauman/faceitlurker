@@ -15,3 +15,18 @@ export const steamBansAPIResponse = z.object({
 });
 
 export type SteamBansAPIResponse = z.infer<typeof steamBansAPIResponse>;
+
+export const steamGameHoursAPIRResponseSchema = z.object({
+	response: z.object({
+		game_count: z.number(),
+		games: z.array(
+			z.object({
+				appid: z.number(),
+				playtime_forever: z.number(),
+				playtime_2weeks: z.number().optional()
+			})
+		)
+	})
+});
+
+export type SteamGameHoursAPIResponse = z.infer<typeof steamGameHoursAPIRResponseSchema>;
