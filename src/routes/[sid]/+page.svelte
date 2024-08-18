@@ -80,6 +80,7 @@
 		if (cs2Matches < 1) {
 			cs2Active = false;
 		}
+		console.log(cs2Matches);
 	});
 </script>
 
@@ -158,7 +159,7 @@
 
 <div class="flex justify-center items-center gap-1 mt-10">
 	<button
-		disabled={cs2Wins < 1}
+		disabled={cs2Matches < 1}
 		title={`${cs2Wins < 1 ? 'No CS2 data' : ''}`}
 		class={`${cs2Active ? 'bg-zinc-400 border' : 'bg-zinc-800 border border-black border-opacity-0'} rounded-sm py-2 px-4 text-xl hover:border-opacity-100 hover:border-zinc-200`}
 		onclick={() => (cs2Active = true)}
