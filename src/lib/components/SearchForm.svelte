@@ -15,7 +15,7 @@
 {/if}
 
 <form
-	class={`w-full mx-auto ${isHomepage ? 'grid gap-2 max-w-xl' : 'flex gap-0 max-w-2xl'}`}
+	class={`w-full mx-auto ${isHomepage ? 'grid gap-2 max-w-xl' : 'grid gap-2 max-w-xl md:flex md:gap-0 md:max-w-2xl'}`}
 	method="POST"
 	action="/?/search"
 >
@@ -28,7 +28,7 @@
 	/>
 	<button
 		type="submit"
-		class={`${isHomepage ? 'mx-auto' : 'rounded-l-none'} font-semibold border rounded-sm w-fit py-2 px-4 hover:bg-zinc-700`}
+		class={`${isHomepage ? 'mx-auto' : 'md:rounded-l-none mx-auto'} font-semibold border rounded-sm w-fit py-2 px-4 hover:bg-zinc-700`}
 		>Search</button
 	>
 </form>
