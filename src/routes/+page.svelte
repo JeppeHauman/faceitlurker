@@ -38,7 +38,7 @@
 					<iconify-icon
 						title={player.country}
 						class="align-baseline"
-						icon={`flag:${player.country}-4x3`}
+						icon={`flag:${player.country.toLowerCase()}-4x3`}
 					></iconify-icon>
 				</p>
 				<p class="font-semibold text-xl">Elo: {player.faceit_elo}</p>
