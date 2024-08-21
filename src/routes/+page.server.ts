@@ -6,6 +6,8 @@ import { superValidate, fail, setError } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { searchSchema } from '$lib/types/searchForm';
 import type { FaceitAPITopPlayersResponse } from '$lib/types/faceitAPI';
+import { linkSchema } from '$lib/types/linkForm';
+import { object } from 'zod';
 
 const steamRegex = /(?:https?:\/\/)?steamcommunity\.com\/(?:profiles|id)\/[\Wa-zA-Z0-9]+/;
 
@@ -87,5 +89,17 @@ export const actions = {
 				message: 'No steam account found'
 			};
 		}
+	},
+
+	link: async ({ request }) => {
+		const form = await request.formData();
+		const player_id = form.get('player_id');
+		const response = await fetch(`https://open.faceit.com/data/v4/players/${player_id}`, {
+			headers: {
+				Authorization: `Bearer ${SERCRET_FACEIT_SERVER_KEY}`
+			}
+		});
+		const faceitPlayer = await response.json();
+		redirect(303, `/${faceitPlayer.steam_id_64}`);
 	}
 } satisfies Actions;

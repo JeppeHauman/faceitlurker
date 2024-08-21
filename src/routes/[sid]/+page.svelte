@@ -96,7 +96,7 @@
 	<iconify-icon
 		title={parsedPlayer.country}
 		class="align-baseline text-2xl"
-		icon={`flag:${parsedPlayer.country}-4x3`}
+		icon={`flag:${parsedPlayer.country.toLowerCase()}-4x3`}
 	></iconify-icon>
 </h1>
 
@@ -110,7 +110,7 @@
 
 {#await data.streamed.steamBans then steamBans}
 	{#await data.streamed.bans then bans}
-		{#if bans.items.length > 0 || steamBans.players[0].CommunityBanned || steamBans.players[0].NumberOfVACBans > 0 || steamBans.players[0].NumberOfGameBans > 0}
+		{#if (bans.items.length > 0 && bans.items[0].ends_at && new Date(bans.items[0].ends_at) > new Date()) || steamBans.players[0].CommunityBanned || steamBans.players[0].NumberOfVACBans > 0 || steamBans.players[0].NumberOfGameBans > 0}
 			<div class="text-center flex justify-center gap-5">
 				{#if steamBans.players[0].CommunityBanned || steamBans.players[0].NumberOfVACBans > 0 || steamBans.players[0].NumberOfGameBans > 0}
 					<div>
