@@ -80,7 +80,6 @@
 		if (cs2Matches < 1) {
 			cs2Active = false;
 		}
-		console.log(cs2Matches);
 	});
 </script>
 
