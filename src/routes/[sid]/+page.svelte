@@ -109,51 +109,50 @@
 </a>
 
 {#await data.streamed.steamBans then steamBans}
-	{#await data.streamed.bans then bans}
-		{#if (bans.items.length > 0 && bans.items[0].ends_at && new Date(bans.items[0].ends_at) > new Date()) || steamBans.players[0].CommunityBanned || steamBans.players[0].NumberOfVACBans > 0 || steamBans.players[0].NumberOfGameBans > 0}
-			<div class="text-center flex justify-center gap-5">
-				{#if steamBans.players[0].CommunityBanned || steamBans.players[0].NumberOfVACBans > 0 || steamBans.players[0].NumberOfGameBans > 0}
-					<div>
-						<p>Volvo bans:</p>
-						{#if steamBans.players[0].CommunityBanned}
-							<p class="text-red-900 text-2xl">Community Banned</p>
-						{/if}
-						{#if steamBans.players[0].NumberOfGameBans === 1}
-							<p class="text-red-900 text-2xl">
-								{steamBans.players[0].NumberOfGameBans} Game Ban
-							</p>
-						{:else if steamBans.players[0].NumberOfGameBans > 1}
-							<p class="text-red-900 text-2xl">
-								{steamBans.players[0].NumberOfGameBans} Game Bans
-							</p>
-						{/if}
-						{#if steamBans.players[0].NumberOfVACBans === 1}
-							<p class="text-red-900 text-2xl">
-								{steamBans.players[0].NumberOfVACBans} VAC Ban
-							</p>
-						{:else if steamBans.players[0].NumberOfVACBans > 1}
-							<p class="text-red-900 text-2xl">
-								{steamBans.players[0].NumberOfVACBans} VAC Bans
-							</p>
-						{/if}
-						{#if steamBans.players[0].DaysSinceLastBan > 0}
-							<p class="text-red-900 text-2xl">
-								{steamBans.players[0].DaysSinceLastBan} Days since last ban
-							</p>
-						{/if}
-					</div>
-				{/if}
-
-				{#if bans.items[0].ends_at && new Date(bans.items[0].ends_at) > new Date()}
-					<div>
-						<p>Faceit bans:</p>
-						<h2 class="text-center text-2xl text-red-900">BANNED for {bans.items[0].reason}</h2>
-						<p>Ends at: {new Date(bans.items[0].ends_at).toLocaleDateString()}</p>
-					</div>
-				{/if}
-			</div>
-		{/if}
-	{/await}
+	{#if steamBans.players.length > 0 && (steamBans.players[0].CommunityBanned || steamBans.players[0].NumberOfGameBans > 0 || steamBans.players[0].NumberOfVACBans > 0)}
+		<div class="text-center flex justify-center gap-5">
+			{#if steamBans.players[0].CommunityBanned || steamBans.players[0].NumberOfVACBans > 0 || steamBans.players[0].NumberOfGameBans > 0}
+				<div>
+					<p>Volvo bans:</p>
+					{#if steamBans.players[0].CommunityBanned}
+						<p class="text-red-900 text-2xl">Community Banned</p>
+					{/if}
+					{#if steamBans.players[0].NumberOfGameBans === 1}
+						<p class="text-red-900 text-2xl">
+							{steamBans.players[0].NumberOfGameBans} Game Ban
+						</p>
+					{:else if steamBans.players[0].NumberOfGameBans > 1}
+						<p class="text-red-900 text-2xl">
+							{steamBans.players[0].NumberOfGameBans} Game Bans
+						</p>
+					{/if}
+					{#if steamBans.players[0].NumberOfVACBans === 1}
+						<p class="text-red-900 text-2xl">
+							{steamBans.players[0].NumberOfVACBans} VAC Ban
+						</p>
+					{:else if steamBans.players[0].NumberOfVACBans > 1}
+						<p class="text-red-900 text-2xl">
+							{steamBans.players[0].NumberOfVACBans} VAC Bans
+						</p>
+					{/if}
+					{#if steamBans.players[0].DaysSinceLastBan > 0}
+						<p class="text-red-900 text-2xl">
+							{steamBans.players[0].DaysSinceLastBan} Days since last ban
+						</p>
+					{/if}
+				</div>
+			{/if}
+		</div>
+	{/if}
+{/await}
+{#await data.streamed.bans then bans}
+	{#if bans.items.length > 0 && bans.items[0].ends_at && new Date(bans.items[0].ends_at) > new Date()}
+		<div class="text-center">
+			<p>Faceit bans:</p>
+			<h2 class="text-center text-2xl text-red-900">BANNED for {bans.items[0].reason}</h2>
+			<p>Ends at: {new Date(bans.items[0].ends_at).toLocaleDateString()}</p>
+		</div>
+	{/if}
 {/await}
 
 <div class="flex justify-center items-center gap-1 mt-10">
