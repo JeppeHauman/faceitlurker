@@ -135,7 +135,11 @@
 							{steamBans.players[0].NumberOfVACBans} VAC Bans
 						</p>
 					{/if}
-					{#if steamBans.players[0].DaysSinceLastBan > 0}
+					{#if steamBans.players[0].DaysSinceLastBan === 1}
+						<p class="text-red-900 text-2xl">
+							{steamBans.players[0].DaysSinceLastBan} Day since last ban
+						</p>
+					{:else if steamBans.players[0].DaysSinceLastBan > 1}
 						<p class="text-red-900 text-2xl">
 							{steamBans.players[0].DaysSinceLastBan} Days since last ban
 						</p>
