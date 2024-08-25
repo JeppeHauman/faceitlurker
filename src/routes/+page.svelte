@@ -44,25 +44,6 @@
 					<p class="font-semibold text-xl">Elo: {player.faceit_elo}</p>
 				</button>
 			</form>
-			<!-- <a
-				target="_blank"
-				href={`https://www.faceit.com/en/players/${player.nickname}`}
-				class="border rounded-sm text-center max-w-sm md:max-w-none w-full mx-auto space-y-4 py-2 hover:bg-zinc-800"
-			>
-				<h4 class="text-2xl font-semibold underline">
-					{player.position}
-				</h4>
-				<p class="space-x-2">
-					<span class="font-semibold text-xl">{player.nickname}</span>
-
-					<iconify-icon
-						title={player.country}
-						class="align-baseline"
-						icon={`flag:${player.country.toLowerCase()}-4x3`}
-					></iconify-icon>
-				</p>
-				<p class="font-semibold text-xl">Elo: {player.faceit_elo}</p>
-			</a> -->
 		{/each}
 	</div>
 {/await}

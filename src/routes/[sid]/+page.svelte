@@ -51,7 +51,7 @@
 			cs2Wins = Number(cs2.lifetime.Wins) - Number(csgo.lifetime.Wins);
 			cs2Matches = Number(cs2.lifetime.Matches) - Number(csgo.lifetime.Matches) || 0;
 		}
-		if (csgo?.errors && cs2) {
+		if (csgo?.errors && !cs2?.errors && cs2) {
 			csgoStats = false;
 			cs2Wins = Number(cs2.lifetime.Wins);
 			cs2Matches = Number(cs2.lifetime.Matches);
