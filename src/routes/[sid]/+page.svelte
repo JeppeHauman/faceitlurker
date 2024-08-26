@@ -7,6 +7,9 @@
 	import faceit_logo from '$lib/assets/faceit_logo.svg';
 	import SearchForm from '$lib/components/SearchForm.svelte';
 	import 'iconify-icon';
+	import SteamBans from '$lib/components/SteamBans.svelte';
+	import FaceitBans from '$lib/components/FaceitBans.svelte';
+	import GameInfo from '$lib/components/GameInfo.svelte';
 
 	let { data } = $props();
 
@@ -34,6 +37,8 @@
 		const csgo = await data.streamed.csgo;
 		const cs2 = await data.streamed.cs2;
 		const hours = await data.streamed.hours;
+		console.log(cs2);
+		console.log(csgo);
 
 		if (hours && hours.response.games) {
 			const gameHours = hours.response.games.filter((game: any) => {
@@ -109,54 +114,10 @@
 </a>
 
 {#await data.streamed.steamBans then steamBans}
-	{#if steamBans.players.length > 0 && (steamBans.players[0].CommunityBanned || steamBans.players[0].NumberOfGameBans > 0 || steamBans.players[0].NumberOfVACBans > 0)}
-		<div class="text-center flex justify-center gap-5">
-			{#if steamBans.players[0].CommunityBanned || steamBans.players[0].NumberOfVACBans > 0 || steamBans.players[0].NumberOfGameBans > 0}
-				<div>
-					<p>Volvo bans:</p>
-					{#if steamBans.players[0].CommunityBanned}
-						<p class="text-red-900 text-2xl">Community Banned</p>
-					{/if}
-					{#if steamBans.players[0].NumberOfGameBans === 1}
-						<p class="text-red-900 text-2xl">
-							{steamBans.players[0].NumberOfGameBans} Game Ban
-						</p>
-					{:else if steamBans.players[0].NumberOfGameBans > 1}
-						<p class="text-red-900 text-2xl">
-							{steamBans.players[0].NumberOfGameBans} Game Bans
-						</p>
-					{/if}
-					{#if steamBans.players[0].NumberOfVACBans === 1}
-						<p class="text-red-900 text-2xl">
-							{steamBans.players[0].NumberOfVACBans} VAC Ban
-						</p>
-					{:else if steamBans.players[0].NumberOfVACBans > 1}
-						<p class="text-red-900 text-2xl">
-							{steamBans.players[0].NumberOfVACBans} VAC Bans
-						</p>
-					{/if}
-					{#if steamBans.players[0].DaysSinceLastBan === 1}
-						<p class="text-red-900 text-2xl">
-							{steamBans.players[0].DaysSinceLastBan} Day since last ban
-						</p>
-					{:else if steamBans.players[0].DaysSinceLastBan > 1}
-						<p class="text-red-900 text-2xl">
-							{steamBans.players[0].DaysSinceLastBan} Days since last ban
-						</p>
-					{/if}
-				</div>
-			{/if}
-		</div>
-	{/if}
+	<SteamBans {steamBans} />
 {/await}
 {#await data.streamed.bans then bans}
-	{#if bans.items.length > 0 && bans.items[0].ends_at && new Date(bans.items[0].ends_at) > new Date()}
-		<div class="text-center">
-			<p>Faceit bans:</p>
-			<h2 class="text-center text-2xl text-red-900">BANNED for {bans.items[0].reason}</h2>
-			<p>Ends at: {new Date(bans.items[0].ends_at).toLocaleDateString()}</p>
-		</div>
-	{/if}
+	<FaceitBans {bans} />
 {/await}
 
 <div class="flex justify-center items-center gap-1 mt-10">
@@ -194,95 +155,35 @@
 				{/if}
 			{/await}
 		</div>
-		{#if cs2Active}
-			<div class="text-xl font-semibold">
-				<p class="flex items-center justify-center gap-2">
-					Elo: {parsedPlayer.games['cs2']?.faceit_elo}
-					{#await import(`$lib/assets/faceitLevelIcon/level_${parsedPlayer.games.cs2?.skill_level}.svg`) then { default: src }}
-						<img class="aspect-square w-7 inline-flex" {src} alt="faceit skill level icon" />
-					{/await}
-				</p>
-			</div>
-		{/if}
 		{#await data.streamed.cs2}
 			<p>loading ...</p>
 		{:then cs2}
 			{#if cs2Active && cs2 && !cs2.errors}
-				<div class="text-xl font-semibold mb-10">
-					<p>Total matches: {cs2Matches}</p>
-					<p>Win rate: {Math.round((cs2Wins / cs2Matches) * 100)}%</p>
-					<p>Average Headshot: {cs2.lifetime['Average Headshots %']}%</p>
-					<p>Lifetime K/D: {cs2KD.toFixed(2)}</p>
-				</div>
-				{#if cs2.segments}
-					<div class="grid sm:grid-cols-2 gap-5 mx-auto w-full max-w-3xl sm:place-content-between">
-						{#each cs2.segments
-							.filter((map) => map.mode == '5v5')
-
-							.sort((map1, map2) => {
-								return Number(map2.stats.Matches) - Number(map1.stats.Matches);
-							}) as map}
-							<div
-								class="relative w-full max-w-sm mx-auto rounded-md py-5 space-y-3 bg-black bg-opacity-50 text-zinc-50"
-							>
-								<!-- Background Image -->
-								<div
-									style={`background-image: url('${map.img_regular}')`}
-									class={`-z-10 absolute inset-0 bg-no-repeat bg-cover bg-center rounded-md`}
-								></div>
-								<h5>{map.label}</h5>
-								<p>Matches: {map.stats.Matches}</p>
-							</div>
-						{/each}
-					</div>
-				{/if}
+				<GameInfo
+					matches={cs2Matches}
+					wins={cs2Wins}
+					avgHeadshot={Number(cs2.lifetime['Average Headshots %'])}
+					game={parsedPlayer.games.cs2!}
+					kd={cs2KD}
+					segments={cs2.segments}
+				/>
 			{/if}
 		{:catch error}
 			<p>{error.message}</p>
 		{/await}
-		{#if !cs2Active}
-			<div class="text-xl font-semibold">
-				<p class="flex items-center justify-center gap-2">
-					Elo: {parsedPlayer.games['csgo']?.faceit_elo}
-					{#await import(`$lib/assets/faceitLevelIcon/level_${parsedPlayer.games.csgo?.skill_level}.svg`) then { default: src }}
-						<img class="aspect-square w-7 inline-flex" {src} alt="faceit skill level icon" />
-					{/await}
-				</p>
-			</div>
-			{#await data.streamed.csgo then csgo}
-				{#if csgo && !csgo.errors}
-					<div class="text-xl font-semibold mb-10">
-						<p>Total matches: {csgo.lifetime.Matches}</p>
-						<p>Win rate: {csgo.lifetime['Win Rate %']}%</p>
-						<p>Average Headshot: {csgo.lifetime['Average Headshots %']}%</p>
-						<p>Lifetime K/D: {csgoKD.toFixed(2)}</p>
-					</div>
-					<div class="grid sm:grid-cols-2 gap-5 mx-auto w-full max-w-3xl sm:place-content-between">
-						{#if csgo.segments}
-							{#each csgo.segments
-								.filter((map) => map.mode == '5v5')
-								.sort((map1, map2) => Number(map2.stats.Matches) - Number(map1.stats.Matches)) as map}
-								<div
-									class="relative sm:w-full max-w-sm rounded-md py-5 space-y-3 bg-black bg-opacity-50 text-zinc-50"
-								>
-									<!-- Background Image -->
-									<div
-										style={`background-image: url('${map.img_regular}')`}
-										class={`-z-10 absolute inset-0 bg-no-repeat bg-cover bg-center rounded-md`}
-									></div>
-									<h5>{map.label}</h5>
-									<p>Matches: {map.stats.Matches}</p>
-								</div>
-							{/each}
-						{/if}
-					</div>
-				{/if}
-			{:catch error}
-				<p>{error}</p>
-			{/await}
-		{/if}
-		<!-- <a href={`/${parsedPlayer.steam_id_64}/${gameNames[i]}/?player_id=${parsedPlayer.player_id}`}
-			>More</a
-		> -->
+		{#await data.streamed.csgo then csgo}
+			{#if !cs2Active && csgo && !csgo.errors}
+				<GameInfo
+					matches={Number(csgo.lifetime.Matches)}
+					wins={Number(csgo.lifetime.Wins)}
+					avgHeadshot={Number(csgo.lifetime['Average Headshots %'])}
+					kd={csgoKD}
+					game={parsedPlayer.games.csgo!}
+					segments={csgo.segments}
+				/>
+			{/if}
+		{:catch error}
+			<p>{error}</p>
+		{/await}
 	{/if}
 </div>

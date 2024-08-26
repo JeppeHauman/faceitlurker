@@ -74,6 +74,8 @@ export const segmentSchema = z.object({
 	})
 });
 
+export type Segment = z.infer<typeof segmentSchema>;
+
 export const faceitCsgoStatsAPIResponse = z.object({
 	game_id: z.string(),
 	player_id: z.string(),
