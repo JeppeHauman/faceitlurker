@@ -27,7 +27,7 @@
 			<form action="?/link" method="post">
 				<input class="hidden" name="player_id" value={player.player_id} />
 				<button
-					class="border rounded-sm text-center max-w-sm md:max-w-none w-full mx-auto space-y-4 py-2 hover:bg-zinc-800"
+					class="border rounded-sm text-center max-w-sm md:max-w-none w-full mx-auto space-y-4 py-2 hover:bg-zinc-800 block"
 				>
 					<h4 class="text-2xl font-semibold underline">
 						{player.position}
