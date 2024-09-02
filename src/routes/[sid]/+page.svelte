@@ -108,7 +108,7 @@
 <a
 	target="_blank"
 	class="block mx-auto w-8 mb-10"
-	href={parsedPlayer.faceit_url.replace('{lang}', parsedPlayer.settings.language)}
+	href={parsedPlayer.faceit_url.replace('{lang}', 'en')}
 >
 	<img src={faceit_logo} alt="faceit logo" />
 </a>
