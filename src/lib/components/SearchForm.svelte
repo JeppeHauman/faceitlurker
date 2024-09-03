@@ -11,16 +11,16 @@
 </script>
 
 {#if $errors._errors}
-	<h3 class="text-center font-bold text-red-600 italic mb-3">{$errors._errors[0]}</h3>
+	<h3 class="mb-3 text-center font-bold italic text-red-600">{$errors._errors[0]}</h3>
 {/if}
 
 <form
-	class={`w-full mx-auto ${isHomepage ? 'grid gap-2 max-w-xl' : 'grid gap-2 max-w-xl md:flex md:gap-0 md:max-w-2xl'}`}
+	class={`mx-auto w-full ${isHomepage ? 'grid max-w-xl gap-2' : 'grid max-w-xl gap-2 md:flex md:max-w-2xl md:gap-0'}`}
 	method="POST"
 	action="/?/search"
 >
 	<input
-		class={`border rounded-sm py-2 px-2 text-xl text-zinc-800 ${isHomepage ? '' : 'flex-grow rounded-r-none'}`}
+		class={`rounded-sm border px-2 py-2 text-xl text-zinc-800 ${isHomepage ? '' : 'flex-grow rounded-r-none'}`}
 		type="text"
 		name="steamUrl"
 		bind:value={$form.steamUrl}
@@ -28,7 +28,7 @@
 	/>
 	<button
 		type="submit"
-		class={`${isHomepage ? 'mx-auto' : 'md:rounded-l-none mx-auto'} font-semibold border rounded-sm w-fit py-2 px-4 hover:bg-zinc-700`}
+		class={`${isHomepage ? 'mx-auto' : 'mx-auto md:rounded-l-none'} w-fit rounded-sm border px-4 py-2 font-semibold hover:bg-zinc-700`}
 		>Search</button
 	>
 </form>

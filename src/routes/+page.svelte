@@ -11,9 +11,9 @@
 <svelte:head>
 	<title>FaceitLurker</title>
 </svelte:head>
-<h1 class="text-center text-4xl font-bold mt-24">Faceit Lurker</h1>
+<h1 class="mt-24 text-center text-4xl font-bold">Faceit Lurker</h1>
 
-<h2 class="text-center text-3xl font-bold mb-5 mt-32">Insert steam profile url</h2>
+<h2 class="mb-5 mt-32 text-center text-3xl font-bold">Insert steam profile url</h2>
 
 <SearchForm data={data.searchForm} {isHomepage} />
 
@@ -22,18 +22,18 @@
 <h3 class="my-10 text-center text-3xl">Top 5 EU players based on elo</h3>
 
 {#await data.streamed.topFive then topFive}
-	<div class="grid md:grid-cols-2 lg:grid-cols-5 gap-2 px-10 justify-stretch container mx-auto">
+	<div class="container mx-auto grid justify-stretch gap-2 px-10 md:grid-cols-2 lg:grid-cols-5">
 		{#each topFive.items as player}
 			<form action="?/link" method="post">
 				<input class="hidden" name="player_id" value={player.player_id} />
 				<button
-					class="border rounded-sm text-center max-w-sm md:max-w-none w-full mx-auto space-y-4 py-2 hover:bg-zinc-800 block"
+					class="mx-auto block w-full max-w-sm space-y-4 rounded-sm border py-2 text-center hover:bg-zinc-800 md:max-w-none"
 				>
 					<h4 class="text-2xl font-semibold underline">
 						{player.position}
 					</h4>
 					<p class="space-x-2">
-						<span class="font-semibold text-xl">{player.nickname}</span>
+						<span class="text-xl font-semibold">{player.nickname}</span>
 
 						<iconify-icon
 							title={player.country}
@@ -41,7 +41,7 @@
 							icon={`flag:${player.country.toLowerCase()}-4x3`}
 						></iconify-icon>
 					</p>
-					<p class="font-semibold text-xl">Elo: {player.faceit_elo}</p>
+					<p class="text-xl font-semibold">Elo: {player.faceit_elo}</p>
 				</button>
 			</form>
 		{/each}

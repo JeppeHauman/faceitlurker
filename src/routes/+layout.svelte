@@ -2,5 +2,5 @@
 	import '../app.css';
 </script>
 
-<a class="text-xl font-semibold px-2" href="/">HOME</a>
+<a class="px-2 text-xl font-semibold" href="/">HOME</a>
 <slot />

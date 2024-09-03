@@ -96,7 +96,7 @@
 	<SearchForm data={data.searchForm} {isHomepage} />
 </div>
 
-<h1 class="text-center text-4xl font-bold my-10">
+<h1 class="my-10 text-center text-4xl font-bold">
 	{parsedPlayer.nickname}
 	<iconify-icon
 		title={parsedPlayer.country}
@@ -107,7 +107,7 @@
 
 <a
 	target="_blank"
-	class="block mx-auto w-8 mb-10"
+	class="mx-auto mb-10 block w-8"
 	href={parsedPlayer.faceit_url.replace('{lang}', 'en')}
 >
 	<img src={faceit_logo} alt="faceit logo" />
@@ -120,17 +120,17 @@
 	<FaceitBans {bans} />
 {/await}
 
-<div class="flex justify-center items-center gap-1 mt-10">
+<div class="mt-10 flex items-center justify-center gap-1">
 	<button
 		disabled={cs2Matches < 1}
 		title={`${cs2Wins < 1 ? 'No CS2 data' : ''}`}
-		class={`${cs2Active ? 'bg-zinc-400 border' : 'bg-zinc-800 border border-black border-opacity-0'} rounded-sm py-2 px-4 text-xl hover:border-opacity-100 hover:border-zinc-200`}
+		class={`${cs2Active ? 'border bg-zinc-400' : 'border border-black border-opacity-0 bg-zinc-800'} rounded-sm px-4 py-2 text-xl hover:border-zinc-200 hover:border-opacity-100`}
 		onclick={() => (cs2Active = true)}
 	>
 		CS2
 	</button>
 	<button
-		class={`${!cs2Active ? 'bg-zinc-400 border' : 'bg-zinc-800 border border-black border-opacity-0'} rounded-sm py-2 px-4 text-xl hover:border-opacity-100 hover:border-zinc-200`}
+		class={`${!cs2Active ? 'border bg-zinc-400' : 'border border-black border-opacity-0 bg-zinc-800'} rounded-sm px-4 py-2 text-xl hover:border-zinc-200 hover:border-opacity-100`}
 		onclick={() => (cs2Active = false)}
 		disabled={!csgoStats}
 		title={`${!csgoStats ? 'No CSGO data' : ''}`}
