@@ -37,8 +37,6 @@
 		const csgo = await data.streamed.csgo;
 		const cs2 = await data.streamed.cs2;
 		const hours = await data.streamed.hours;
-		console.log(cs2);
-		console.log(csgo);
 
 		if (hours && hours.response.games) {
 			const gameHours = hours.response.games.filter((game: any) => {
