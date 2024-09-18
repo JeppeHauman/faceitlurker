@@ -9,7 +9,8 @@ import type { FaceitAPITopPlayersResponse } from '$lib/types/faceitAPI';
 import { linkSchema } from '$lib/types/linkForm';
 import { object } from 'zod';
 
-const steamRegex = /(?:https?:\/\/)?steamcommunity\.com\/(?:profiles|id)\/[\Wa-zA-Z0-9]+/;
+// const steamRegex = /(?:https?:\/\/)?steamcommunity\.com\/(?:profiles|id)\/[\Wa-zA-Z0-9]+/;
+const steamRegex = /(?:https?:\/\/)?steamcommunity\.com\/(?:profiles|id)\/[\w]+/;
 
 const getTopPlayers = async (): Promise<FaceitAPITopPlayersResponse> => {
 	const response = await fetch(
@@ -51,7 +52,6 @@ export const actions = {
 		if (!form.valid) {
 			return fail(400, { form });
 		}
-
 		if (!steamRegex.test(form.data.steamUrl)) {
 			return setError(form, '', 'Please use steam profile url');
 		}
