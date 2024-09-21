@@ -10,7 +10,7 @@ import { linkSchema } from '$lib/types/linkForm';
 import { object } from 'zod';
 
 // const steamRegex = /(?:https?:\/\/)?steamcommunity\.com\/(?:profiles|id)\/[\Wa-zA-Z0-9]+/;
-const steamRegex = /(?:https?:\/\/)?steamcommunity\.com\/(?:profiles|id)\/[\w]+/;
+const steamRegex = /(?:https?:\/\/)?steamcommunity\.com\/(?:profiles|id)\/[\w\W]+/;
 
 const getTopPlayers = async (): Promise<FaceitAPITopPlayersResponse> => {
 	const response = await fetch(
@@ -85,9 +85,7 @@ export const actions = {
 			redirect(303, `/${sid.getSteamID64().toString()}`);
 		}
 		if (!sid || !sid.isValidIndividual()) {
-			return {
-				message: 'No steam account found'
-			};
+			return setError(form, '', 'No steam account found');
 		}
 	},
 
