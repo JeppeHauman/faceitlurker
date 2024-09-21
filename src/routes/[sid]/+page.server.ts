@@ -13,9 +13,14 @@ export const load: PageServerLoad = async ({ params, setHeaders }) => {
 
 	// try cs2 first
 	let data = await getPlayerInfo(params.sid, 'cs2');
+	if (!data.games.cs2 && !data.games.csgo) {
+		error(404, 'No games on faceit');
+	}
+
 	if (data.errors) {
 		data = await getPlayerInfo(params.sid, 'csgo');
 	}
+
 	if (data.errors) {
 		error(404, 'No faceit account found');
 	}
