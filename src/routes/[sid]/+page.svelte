@@ -32,12 +32,27 @@
 	let csgoKD = $state(0);
 	let csHours = $state(0);
 	let csHours2Weeks = $state(0);
+	let lastCs2MatchDate = $state('');
+	let lastCsgoMatchDate = $state('');
+	let lastCs2MatchLink = $state('');
+	let lastCsgoMatchLink = $state('');
 
 	onMount(async () => {
 		const csgo = await data.streamed.csgo;
 		const cs2 = await data.streamed.cs2;
+		const lastCs2Match = await data.streamed.lastCs2Match;
+		const lastCsgoMatch = await data.streamed.lastCsgoMatch;
 		const hours = await data.streamed.hours;
-		console.log(cs2);
+
+		if (lastCs2Match && lastCs2Match.items.length > 0) {
+			lastCs2MatchDate = new Date(lastCs2Match.items[0].finished_at * 1000).toDateString();
+			lastCs2MatchLink = lastCs2Match.items[0].faceit_url.replace('{lang}', 'en');
+		}
+
+		if (lastCsgoMatch && lastCsgoMatch.items.length > 0) {
+			lastCsgoMatchDate = new Date(lastCsgoMatch.items[0].finished_at * 1000).toDateString();
+			lastCsgoMatchLink = lastCsgoMatch.items[0].faceit_url.replace('{lang}', 'en');
+		}
 
 		if (hours && hours.response.games) {
 			const gameHours = hours.response.games.filter((game: any) => {
@@ -165,6 +180,8 @@
 					game={parsedPlayer.games.cs2!}
 					kd={cs2KD}
 					segments={cs2.segments}
+					lastMatch={lastCs2MatchDate}
+					lastMatchLink={lastCs2MatchLink}
 				/>
 			{/if}
 		{:catch error}
@@ -179,6 +196,8 @@
 					kd={csgoKD}
 					game={parsedPlayer.games.csgo!}
 					segments={csgo.segments}
+					lastMatch={lastCsgoMatchDate}
+					lastMatchLink={lastCsgoMatchLink}
 				/>
 			{/if}
 		{:catch error}

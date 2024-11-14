@@ -4,6 +4,8 @@
 	export let game: FaceitGame;
 	export let matches: number, wins: number, kd: number, avgHeadshot: number;
 	export let segments: Segment[];
+	export let lastMatch = '',
+		lastMatchLink: string;
 </script>
 
 <div class="text-xl font-semibold">
@@ -20,6 +22,11 @@
 	<p>Win rate: {Math.round((wins / matches) * 100)}%</p>
 	<p>Average Headshot: {avgHeadshot}%</p>
 	<p>Lifetime K/D: {kd.toFixed(2)}</p>
+	{#if lastMatch !== ''}
+		<p>
+			Last Match: <a target="_blank" href={lastMatchLink.replace('{lang}', 'en')}>{lastMatch}</a>
+		</p>
+	{/if}
 </div>
 {#if segments}
 	<div class="mx-auto grid w-full max-w-3xl gap-5 sm:grid-cols-2 sm:place-content-between">

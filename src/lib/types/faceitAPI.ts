@@ -95,6 +95,19 @@ export const faceitCs2StatsAPIResponse = z.object({
 
 export type FaceitCs2StatsAPIResponse = z.infer<typeof faceitCs2StatsAPIResponse> & FaceitAPIErrors;
 
+// FULL MATCHES API
+
+export const faceitAPIMatchesSchema = z.object({
+	items: z.array(
+		z.object({
+			finished_at: z.number(),
+			faceit_url: z.string()
+		})
+	)
+});
+
+export type FaceitAPIMatchesResponse = z.infer<typeof faceitAPIMatchesSchema>;
+
 // BANS API
 
 export const faceitAPIBanSchema = z.object({
