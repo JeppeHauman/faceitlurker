@@ -40,6 +40,8 @@
 	onMount(async () => {
 		const csgo = await data.streamed.csgo;
 		const cs2 = await data.streamed.cs2;
+		console.log('cs2: ', cs2);
+		console.log('csgo: ', csgo);
 		const lastCs2Match = await data.streamed.lastCs2Match;
 		const lastCsgoMatch = await data.streamed.lastCsgoMatch;
 		const hours = await data.streamed.hours;
@@ -58,7 +60,7 @@
 			const gameHours = hours.response.games.filter((game: any) => {
 				return game.appid === 730;
 			})[0];
-			if (gameHours.playtime_forever > 0) {
+			if (gameHours && gameHours.playtime_forever > 0) {
 				csHours = gameHours.playtime_forever;
 				if (gameHours.playtime_2weeks && gameHours.playtime_2weeks > 0) {
 					csHours2Weeks = gameHours.playtime_2weeks;
