@@ -40,8 +40,6 @@
 	onMount(async () => {
 		const csgo = await data.streamed.csgo;
 		const cs2 = await data.streamed.cs2;
-		console.log('cs2: ', cs2);
-		console.log('csgo: ', csgo);
 		const lastCs2Match = await data.streamed.lastCs2Match;
 		const lastCsgoMatch = await data.streamed.lastCsgoMatch;
 		const hours = await data.streamed.hours;
