@@ -1,3 +1,3 @@
 # Faceit Lurker
 
-A website to look up your own or enemies stats on faceit. 
+A website to look up your own or opponents stats on faceit. 
